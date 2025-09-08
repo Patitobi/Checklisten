@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Fahrzeuge – Checklisten</title>
+  <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+  <h1>Fahrzeugübersicht</h1>
+  <div class="grid" id="vehicleGrid"></div>
+
+  <script>
+    const API_URL = "/api/checklisten";
+
+    // Hilfsfunktion: heutiges Datum im ISO-Format
+    function todayISO() {
+      return new Date().toISOString().split("T")[0];
+    }
+
+    // Hilfsfunktion: Datum ins deutsche Format umwandeln
+    function toGermanDate(isoDate) {
+      if (!isoDate) return "-";
+      const [year, month, day] = isoDate.split("-");
+      return `${day}.${month}.${year}`;
+    }
+
+    async function loadVehicles() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      // Letzten Check pro Fahrzeug bestimmen
+      const lastChecks = {};
+      data.forEach(entry => {
+        if (!lastChecks[entry.fahrzeug] || entry.datum > lastChecks[entry.fahrzeug]) {
+          lastChecks[entry.fahrzeug] = entry.datum;
+        }
+      });
+
+      const grid = document.getElementById("vehicleGrid");
+      grid.innerHTML = "";
+
+      Object.keys(lastChecks).forEach(fahrzeug => {
+        const datum = lastChecks[fahrzeug];
+        const checkedToday = datum === todayISO();
+
+        // Bild aus den Daten holen
+        const fahrzeugData = data.find(entry => entry.fahrzeug === fahrzeug);
+        const img = fahrzeugData?.img || "default.jpg"; // Fallback-Bild, falls kein Bild vorhanden ist
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="/static/img/${img}" alt="${img}">
+          <h3>${fahrzeug}</h3>
+          <div>Letzter Check: ${toGermanDate(datum)}</div>
+          <div class="status">
+            <span>Status:</span>
+            <span class="circle ${checkedToday ? "green" : "red"}"></span>
+          </div>
+        `;
+
+        // Beim Klick → passende Checkliste-Seite öffnen
+        card.addEventListener("click", () => {
+          window.location.href = `/displayChecklist.html?path=${fahrzeugData.path}`;
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    loadVehicles();
+  </script>
+</body>
+</html>

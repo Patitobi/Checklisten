@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Checkliste</title>
+  <link rel="stylesheet" href="/static/css/displayChecklist.css">
+</head>
+
+<body>
+  <h1 id="pageTitle">Checkliste</h1>
+  <table>
+    <tr>
+      <td>
+        <label for="fahrer">Fahrer</label>
+        <input type="text" id="fahrer" placeholder="Name oder dor-Nummer">
+      </td>
+      <td>
+        <label for="beifahrer">Beifahrer</label>
+        <input type="text" id="beifahrer" placeholder="Name oder dor-Nummer">
+      </td>
+      <td>
+        <label for="praktikant">Praktikant</label>
+        <input type="text" id="praktikant" placeholder="Name oder dor-Nummer">
+      </td>
+    </tr>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>Fach</th>
+        <th>Inhalt</th>
+        <th>Bemerkung</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="checklist"></tbody>
+    <tr>
+      <td>
+        <label for="10L">Flaschendruck 10L</label>
+        <input type="text" id="10L" placeholder="in Bar">
+      </td>
+      <td>
+        <label for="2L">Flaschendruck 2L</label>
+        <input type="text" id="2L" placeholder="in Bar">
+      </td>
+      <td colspan="2">
+        <label for="2LM">Flaschendruck 2L Medumat</label>
+        <input type="text" id="2LM" placeholder="in Bar">
+      </td>
+    </tr>
+  </table>
+  <button id="confirmButton">Bestätigen</button>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get("path");
+
+    async function loadChecklist() {
+      const res = await fetch(`/api/checklist/${path}`);
+      const data = await res.json();
+
+      const checklist = document.getElementById("checklist");
+      checklist.innerHTML = "";
+
+      // Set the page title with the vehicle name
+      document.getElementById("pageTitle").textContent = `Checkliste - ${path.replace(/_/g, ' ')}`;
+
+      // Sort the data based on the schema array
+      const schema = data.schema || [];
+      schema.forEach((fach) => {
+        if (data[fach]) {
+          const items = data[fach];
+
+          const row = document.createElement("tr");
+          row.classList.add("collapsible");
+          row.innerHTML = `
+            <td>
+              <span class="collapsible-symbol">▶</span>${fach}
+            </td>
+            <td>${Object.keys(items).length} Items</td>
+            <td><input type="text" class="remark" data-fach="${fach}" placeholder="Bemerkung"></td>
+            <td class="checkbox"><input type="checkbox" data-fach="${fach}"></td>
+          `;
+          checklist.appendChild(row);
+
+          const itemsRow = document.createElement("tr");
+          itemsRow.classList.add("items");
+          itemsRow.style.display = "none"; // Ensure itemsRow is hidden by default
+          const itemsCell = document.createElement("td");
+          itemsCell.colSpan = 4;
+
+          const itemsTable = document.createElement("table");
+          itemsTable.style.width = "100%";
+          itemsTable.style.borderCollapse = "collapse";
+
+          Object.entries(items).forEach(([item, count]) => {
+            const itemRow = document.createElement("tr");
+            itemRow.innerHTML = `
+              <td>${item}</td>
+              <td>${count}</td>
+            `;
+            itemsTable.appendChild(itemRow);
+          });
+
+          itemsCell.appendChild(itemsTable);
+          itemsRow.appendChild(itemsCell);
+          checklist.appendChild(itemsRow);
+
+          row.addEventListener("click", (event) => {
+            if (event.target.tagName !== "INPUT") { // Prevent toggle if checkbox or text field is clicked
+              itemsRow.style.display = itemsRow.style.display === "none" ? "table-row" : "none";
+              const symbol = row.querySelector(".collapsible-symbol");
+              symbol.textContent = itemsRow.style.display === "none" ? "▶" : "▼";
+            }
+          });
+        }
+      });
+    }
+
+    document.getElementById("confirmButton").addEventListener("click", async () => {
+      const fahrer = document.getElementById("fahrer").value.trim();
+      const beifahrer = document.getElementById("beifahrer").value.trim();
+      const praktikant = document.getElementById("praktikant").value.trim();
+      const flaschendruck10L = document.getElementById("10L").value.trim();
+      const flaschendruck2L = document.getElementById("2L").value.trim();
+      const flaschendruck2LM = document.getElementById("2LM").value.trim();
+
+      // Validation check
+      if (!fahrer || !beifahrer || !flaschendruck10L || !flaschendruck2L || !flaschendruck2LM) {
+        alert("Bitte füllen Sie alle erforderlichen Felder aus: Fahrer, Beifahrer und Flaschendrücke.");
+        return;
+      }
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const remarks = document.querySelectorAll('input.remark');
+      const checkedItems = {};
+      checkboxes.forEach((checkbox) => {
+        const fach = checkbox.dataset.fach;
+        const remarkField = Array.from(remarks).find((remark) => remark.dataset.fach === fach);
+        const remark = remarkField ? remarkField.value.trim() : "";
+        checkedItems[fach] = { checked: checkbox.checked, remark }; // Save state regardless of checkbox status
+      });
+
+      const payload = {
+        fahrer,
+        beifahrer,
+        praktikant,
+        path,
+        checkedItems,
+        datum: new Date().toISOString(),
+      };
+
+      await fetch(`/api/saveChecklist`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      alert("Checkliste gespeichert!");
+      window.location.href = "/";
+    });
+
+    loadChecklist();
+  </script>
+</body>
+
+</html>
