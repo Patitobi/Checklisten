@@ -34,7 +34,7 @@ def add_checkliste():
 
 @app.route("/api/checklist/<path>", methods=["GET"])
 def get_checklist(path):
-    file_path = os.path.join("carTabell", f"{path}.json")
+    file_path = os.path.join(BASE_DIR, "carTabell", f"{path}.json")
     if not os.path.exists(file_path):
         return jsonify({}), 404
     with open(file_path, "r", encoding="utf-8") as f:
@@ -43,7 +43,7 @@ def get_checklist(path):
 @app.route("/api/saveChecklist", methods=["POST"])
 def save_checklist():
     data = request.json
-    vehicle_path = os.path.join("localSave/savedChecklist", data["path"])
+    vehicle_path = os.path.join(BASE_DIR, "localSave/savedChecklist", data["path"])
     os.makedirs(vehicle_path, exist_ok=True)
 
     file_name = f"{data['datum'].replace(':', '-').replace('T', '_')}.json"
@@ -72,4 +72,4 @@ def display_checklist():
     return render_template("displayChecklist.html")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
