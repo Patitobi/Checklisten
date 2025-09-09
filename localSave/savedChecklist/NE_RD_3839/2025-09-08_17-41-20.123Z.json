@@ -1,0 +1,89 @@
+{
+  "fahrer": "Kessel",
+  "beifahrer": "Böse",
+  "praktikant": "",
+  "path": "NE_RD_3839",
+  "checkedItems": {
+    "Fach 1": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 2": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 3": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 4": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 5": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 6": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 7": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 8": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 9": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 10": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 11": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 12": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 13": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 14": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 15": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 16": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 17": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 18": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 19": {
+      "checked": false,
+      "remark": ""
+    },
+    "Fach 20": {
+      "checked": false,
+      "remark": ""
+    }
+  },
+  "datum": "2025-09-08T17:41:20.123Z"
+}
