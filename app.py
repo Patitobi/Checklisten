@@ -4,7 +4,9 @@ import os
 
 app = Flask(__name__, template_folder="templates")
 
-DATA_FILE = "localSave/checklisten.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "localSave/checklisten.json")
+
 
 # Hilfsfunktionen
 def load_data():
