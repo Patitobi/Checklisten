@@ -1,6 +1,6 @@
 @echo off
 REM Wechselt ins Projektverzeichnis
-cd /d C:\Users\02tob\Desktop\Checklisten
+cd /d ../../
 
 REM Aktiviert die virtuelle Umgebung
 call venv\Scripts\activate
