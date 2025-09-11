@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkliste Ansicht</title>
+  <link rel="stylesheet" href="/static/css/viewChecklist.css">
+</head>
+<body>
+  <h1>Checkliste</h1>
+  <table id="checklistTable">
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Fahrer</th>
+        <th>Beifahrer</th>
+        <th>Alle Fächer Vollständig</th>
+        <th>Bemerkungen</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dynamische Inhalte -->
+    </tbody>
+  </table>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get("path");
+    const API_URL = `/api/viewChecklist/${path}`;
+
+    async function loadChecklist() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      const tableBody = document.querySelector("#checklistTable tbody");
+      tableBody.innerHTML = "";
+
+      data.forEach(entry => {
+        const formattedDate = new Date(entry.datum).toLocaleDateString("de-DE");
+        const allChecked = Object.values(entry.checkedItems).every(item => item.checked === true);
+        const nonEmptyRemarks = Object.values(entry.checkedItems).filter(item => item.remark.trim() !== "").length;
+        const remarksExist = nonEmptyRemarks > 0 ? "Ja" : "Nein";
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>${entry.fahrer || "-"}</td>
+          <td>${entry.beifahrer || "-"}</td>
+          <td>${allChecked ? "Ja" : "Nein"}</td>
+          <td>${remarksExist}</td>
+          <td><a href="/detailsChecklist.html?path=${entry.path}" class="details-link">Details anzeigen</a></td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    loadChecklist();
+  </script>
+</body>
+</html>

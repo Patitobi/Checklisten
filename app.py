@@ -62,6 +62,31 @@ def save_checklist():
 
     return jsonify({"status": "ok", "file": file_path})
 
+@app.route("/api/viewChecklist/<path>", methods=["GET"])
+def view_checklist(path):
+    file_path = os.path.join(BASE_DIR, "localSave/savedChecklist", path)
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Checkliste nicht gefunden"}), 404
+
+    checklist_files = [f for f in os.listdir(file_path) if f.endswith(".json")]
+    checklist_data = []
+    for file_name in checklist_files:
+        with open(os.path.join(file_path, file_name), "r", encoding="utf-8") as f:
+            checklist_data.append(json.load(f))
+
+    return jsonify(checklist_data)
+
+@app.route("/api/detailsChecklist/<path>", methods=["GET"])
+def details_checklist(path):
+    file_path = os.path.join(BASE_DIR, "localSave/savedChecklist", f"{path}.json")
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Checkliste nicht gefunden"}), 404
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        checklist_data = json.load(f)
+
+    return jsonify(checklist_data)
+
 # Webseite ausliefern
 @app.route("/")
 def index():
@@ -70,6 +95,14 @@ def index():
 @app.route("/displayChecklist.html")
 def display_checklist():
     return render_template("displayChecklist.html")
+
+@app.route("/viewChecklist.html")
+def view_checklist_page():
+    return render_template("viewChecklist.html")
+
+@app.route("/detailsChecklist.html")
+def details_Checklist_page():
+    return render_template("detailsChecklist.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

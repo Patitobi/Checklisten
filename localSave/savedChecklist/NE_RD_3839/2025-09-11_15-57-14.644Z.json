@@ -1,0 +1,89 @@
+{
+  "fahrer": "Kessel",
+  "beifahrer": "Chef",
+  "praktikant": "",
+  "path": "NE_RD_3839",
+  "checkedItems": {
+    "Fach 1": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 2": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 3": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 4": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 5": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 6": {
+      "checked": true,
+      "remark": "Schrank ist defekt"
+    },
+    "Fach 7": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 8": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 9": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 10": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 11": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 12": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 13": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 14": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 15": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 16": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 17": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 18": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 19": {
+      "checked": true,
+      "remark": ""
+    },
+    "Fach 20": {
+      "checked": true,
+      "remark": ""
+    }
+  },
+  "datum": "2025-09-11T15:57:14.644Z"
+}

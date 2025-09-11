@@ -57,11 +57,19 @@
             <span>Status:</span>
             <span class="circle ${checkedToday ? "green" : "red"}"></span>
           </div>
+          <button class="view-checklist-button">Checkliste anzeigen</button>
         `;
 
         // Beim Klick → passende Checkliste-Seite öffnen
         card.addEventListener("click", () => {
           window.location.href = `/displayChecklist.html?path=${fahrzeugData.path}`;
+        });
+
+        // Neue Schaltfläche "Checkliste anzeigen" hinzufügen
+        const viewChecklistButton = card.querySelector(".view-checklist-button");
+        viewChecklistButton.addEventListener("click", (e) => {
+          e.stopPropagation(); // Verhindert das Auslösen des Card-Klick-Events
+          window.location.href = `/viewChecklist.html?path=${fahrzeugData.path}`;
         });
 
         grid.appendChild(card);

@@ -1,6 +1,6 @@
 @echo off
 REM Wechselt ins Projektverzeichnis
-cd /d ../../
+cd /d /
 
 REM Aktiviert die virtuelle Umgebung
 call venv\Scripts\activate

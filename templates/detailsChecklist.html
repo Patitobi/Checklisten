@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkliste Details</title>
+  <link rel="stylesheet" href="/static/css/detailsChecklist.css">
+</head>
+<body>
+  <h1 id="pageTitle">Checkliste Details</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Fach</th>
+        <th>Inhalt</th>
+        <th>Bemerkung</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="checklist"></tbody>
+  </table>
+  <button id="backButton">Zurück</button>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get("path");
+
+    async function loadChecklistDetails() {
+      const res = await fetch(`/api/detailsChecklist/?path=${path}`);
+      const data = await res.json();
+
+      const checklist = document.getElementById("checklist");
+      checklist.innerHTML = "";
+
+      document.getElementById("pageTitle").textContent = `Checkliste Details - ${path.replace(/_/g, ' ')}`;
+
+      Object.entries(data.checkedItems).forEach(([fach, details]) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${fach}</td>
+          <td>${details.checked ? "✔" : "✘"}</td>
+          <td>${details.remark || "-"}</td>
+          <td>${details.checked ? "Vollständig" : "Unvollständig"}</td>
+        `;
+        checklist.appendChild(row);
+      });
+    }
+
+    document.getElementById("backButton").addEventListener("click", () => {
+      window.history.back();
+    });
+
+    loadChecklistDetails();
+  </script>
+</body>
+</html>
